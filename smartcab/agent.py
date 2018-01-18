@@ -39,7 +39,8 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-
+        self.epsilon = self.epsilon * 0.99
+        self.epsilon, self.alpha = 0 if testing else self.epsilon, self.alpha
         return None
 
     def build_state(self):
@@ -60,10 +61,9 @@ class LearningAgent(Agent):
         # Because the aim of this project is to teach Reinforcement Learning, we have placed 
         # constraints in order for you to learn how to adjust epsilon and alpha, and thus learn about the balance between exploration and exploitation.
         # With the hand-engineered features, this learning process gets entirely negated.
-        
-        # Set 'state' as a tuple of relevant data for the agent        
-        state = None
 
+        # Set 'state' as a tuple of relevant data for the agent
+        state = (waypoint, inputs['light'], inputs['left'], inputs['right'], inputs['oncoming'], deadline)
         return state
 
 
@@ -76,9 +76,10 @@ class LearningAgent(Agent):
         ###########
         # Calculate the maximum Q-value of all actions for a given state
 
-        maxQ = None
+        # maxQ = None
 
-        return maxQ 
+        # return maxQ 
+        return max(self.Q[state].values())
 
 
     def createQ(self, state):
@@ -90,7 +91,9 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-
+        if self.learning and state not in self.Q:
+            for actions in self.valid_actions:
+                self.Q[state] = 0.0
         return
 
 
