@@ -42,7 +42,7 @@ class LearningAgent(Agent):
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
 
-        self.epsilon = np.cos(0.01 * self.timer) + (self.alpha - 0.2)
+        self.epsilon = np.cos(0.01 * self.timer) + 0.5
         self.timer += 1
         self.epsilon, self.alpha = 0 if testing else self.epsilon, self.alpha
         
@@ -98,7 +98,7 @@ class LearningAgent(Agent):
         if self.learning and state not in self.Q.keys():
             self.Q[state]={ None: 0, 'forward': 0, 'left': 0, 'right': 0 }
    
-        return
+        return None
 
 
     def choose_action(self, state):
