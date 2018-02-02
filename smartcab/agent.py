@@ -41,7 +41,6 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-
         self.epsilon = np.cos(0.01 * self.timer) + 0.5
         self.timer += 1
         self.epsilon, self.alpha = 0 if testing else self.epsilon, self.alpha
@@ -122,7 +121,7 @@ class LearningAgent(Agent):
             if self.epsilon > np.random.rand():
                 action = random.choice(self.valid_actions)
             else:
-                list_of_actions = [action for action in self.valid_actions if self.Q[state][action] is self.get_maxQ(state)]
+                list_of_actions = [action for action in self.valid_actions if self.Q[state][action] == self.get_maxQ(state)]
                 action = random.choice(list_of_actions)
         else:
             action = random.choice(self.valid_actions)
@@ -200,7 +199,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test = 3, tolerance = 0.00004)
+    sim.run(n_test = 10, tolerance = 0.00004)
 
 
 if __name__ == '__main__':
