@@ -13144,6 +13144,10 @@ ex18Yjc1AAAAAElFTkSuQmCC
 <li>right and left (<em>efficiency</em>): Allow the agent to get to its destination with efficiency.</li>
 <li>oncoming (<em>safety</em>): Don't hit anything coming your way!</li>
 </ul>
+<p>Deadline is not considered an appropriate feature due to the following:</p>
+<ul>
+<li>deadline could impact <strong>safety</strong> negatively by forcing the agent to take sub-optimal(i.e. risky) choices to reach the destination on time.</li>
+</ul>
 
 </div>
 </div>
@@ -16526,58 +16530,61 @@ wHLOOeecc865MvEAyznnnHPOOefKxAMs55xzzjnnnCuT/wdxnRlh3rbfDwAAAABJRU5ErkJggg==
 <p><strong>Answer:</strong></p>
 <p><img src="images/traffic.jpg">
 <em>note: needed help visualizing road users who drive on the wrong side of the road. I drive on the left (the correct side, heh).</em></p>
-<p>1. Optimal policies (_assuming agent follows waypoint, except for exception, below. The exception lowers safety but not reliability_):
-<ul> 
-<li> if [red] light, and agent waypoint is [right, left, forward] and car on [left] is [forward] then [None] <strong>(exception)</strong> else  turn [right] if waypoint is [forward] if oncoming cars is not [forward].</li>
-<li> if [green] light, and agent waypoint is [right, left, foward] and oncoming cars is not [forward] then move [right, left, forward]  else if oncoming cars is [forward] agent's state must be [None].</li>
+<p>1. Optimal policies:
+<ul type="a"> 
+<li>if(light: red) **and agent** waypoint: right **and** oncoming: left **and** not forward **then** action: right.</li>
+<li>if(light: red) **and agent** waypoint: forward **or** left **then** action: None.</li>
+<li>if(light: green) **and agent** waypoint: right **then** action: right</li>
+<li>if(light: green) **and agent** waypoint: forward **then** action: forward</li>
+<li>if(light: green) **and agent** waypoint: left **and** oncoming: left **and** not forward **then** action: left **else if** oncoming: forward **then** action: None</li>
+<li>if(light: green) **and agent** waypoint: left **and** oncoming: right **or** forward **then** action: None</li>
 </ul>
+
 <p>2. There are unexpected policies, for example:</p>
-<pre><code>```
-('right', 'green', 'forward', 'left', 'forward')
+<pre><code>('right', 'green', 'forward', 'left', 'forward')
  -- forward : 0.00
  -- right : 0.00
  -- None : 0.00
  -- left : 0.00
-```
 
 </code></pre>
 <p>3. Here are 3 examples of the agent selecting the optimal policy:</p>
-<pre><code>```
-// 1. Stop at a red light (increased reliability)
-('right', 'red', 'left', 'forward', 'forward')
- -- forward : 0.00
- -- right : 0.00
- -- None : 0.97
+<pre><code>3a. Stop at a red light (increased reliability)
+# if(light: red) and agent (waypoint: forward or left) then (action: None)
+('left', 'red', None, 'right', 'forward')
+ -- forward : -7.91
+ -- right : 1.27
+ -- None : 1.82
  -- left : 0.00
-```
 
-```
-// 2. Move when light is green, towards destination (increased safety and reliability)
-('left', 'green', 'right', None, None)
- -- forward : 0.36
- -- right : -0.21
- -- None : -3.44
- -- left : 2.14
-```
 
-```
-// 3. Move when light is green, do not stay stationary (increased reliability)
+
+3b. Move when light is green, towards destination (increased safety and reliability)
+# if(light: green) and agent (waypoint: forward) then (action: forward)
+('forward', 'green', None, 'left', None)
+ -- forward : 1.74
+ -- right : 0.84
+ -- None : -5.52
+ -- left : 0.49
+
+
+
+3c. Move when light is green, do not stay stationary (increased reliability)
+# if(light: green) and agent (waypoint: right) then (action: right)
 ('right', 'green', 'right', 'left', None)
  -- forward : 0.00
  -- right : 1.33
  -- None : -4.09
  -- left : 0.43
-```
+
 
 </code></pre>
 <p>4. One instance when the cab did not learn the optimal policy is below. The agent should have chosen either 'forward', 'right' or 'left' to reach it's destination within the given time frame. Additional training might help.</p>
-<pre><code>```
-('forward', 'green', 'right', 'forward', 'left')
+<pre><code>('forward', 'green', 'right', 'forward', 'left')
  -- forward : 0.00
  -- right : 0.00
  -- None : 0.00
- -- left : 0.00
-```</code></pre>
+ -- left : 0.00</code></pre>
 
 </div>
 </div>
