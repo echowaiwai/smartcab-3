@@ -1,3 +1,4 @@
+backports.functools-lru-cache==1.4
 certifi==2017.11.5
 chardet==3.0.4
 cycler==0.10.0
@@ -13,5 +14,6 @@ python-dateutil==2.6.1
 pytz==2017.3
 requests==2.18.4
 six==1.11.0
+subprocess32==3.2.7
 urllib3==1.22
 yarg==0.1.9
